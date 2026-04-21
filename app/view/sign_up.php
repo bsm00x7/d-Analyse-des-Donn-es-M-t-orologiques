@@ -34,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($password !== $password_confirm) {
             $error = 'Passwords do not match.';
         } else {
-            // Check if email already exists
             $stmt = $conn->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_id']   = $new_id;
                     $_SESSION['user_name'] = $name;
 
-                    header('Location: /dashboard');
+                    header('Location: ../../home.php');
                     exit;
                 } else {
                     $error = 'Something went wrong. Please try again.';

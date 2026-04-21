@@ -32,8 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $token = bin2hex(random_bytes(32));
                     setcookie('remember_token', $token, time() + 60 * 60 * 24 * 30, '/', '', true, true);
                 }
+                if ($user['role'] == 'admin') {
 
-                header('Location: ../../index.php');
+                    header('Location: /analyseM/dashboard');
+                } else {
+                    header('Location: /analyseM/home.php');
+                }
+
+
                 exit;
             } else {
                 $error = 'Invalid email or password.';
