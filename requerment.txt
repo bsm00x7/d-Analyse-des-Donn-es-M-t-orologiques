@@ -26,3 +26,6 @@ create file with name .htaccess {
 
 import data base
     and see .env instruction and make it
+
+if make it any change il faut create anthor branch with name feature and make what do you want or make pull request for project 
+after reviwe accpet or refuse change
