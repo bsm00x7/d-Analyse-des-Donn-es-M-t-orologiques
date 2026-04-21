@@ -1,0 +1,2 @@
+npm i bootstrap@5.3.8
+composer require vlucas/phpdotenv
