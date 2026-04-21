@@ -1,2 +1,28 @@
 npm i bootstrap@5.3.8
 composer require vlucas/phpdotenv
+composer require nikic/fast-route
+https://github.com/nikic/FastRoute
+
+create file with name .env {
+    and add this instruction
+    DB_SERVER="name de server"
+    DB_NAME="name data base"
+    DB_USER="name user of use data base"
+    DB_PASS="data base password"
+}
+create file with name .htaccess {
+    and add this instruction
+    <IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /analyseM/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+    </IfModule>
+
+
+}
+
+
+import data base
+    and see .env instruction and make it
