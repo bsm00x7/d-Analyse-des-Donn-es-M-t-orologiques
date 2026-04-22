@@ -1,66 +1,85 @@
 <?php
-require(__DIR__ . '/../../config/database.php');
+require(__DIR__ . '/../../../config/database.php');
 
 session_start();
+
+// CSRF
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 $error   = '';
-$success = '';
 $fields  = ['name' => '', 'email' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // CSRF check
     if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
-        $error = 'Invalid request. Please try again.';
+        $error = 'Invalid request.';
     } else {
-        $name            = trim($_POST['name'] ?? '');
-        $email           = trim($_POST['email'] ?? '');
-        $password        = $_POST['password'] ?? '';
-        $password_confirm = $_POST['password_confirm'] ?? '';
+
+        $name     = trim($_POST['name'] ?? '');
+        $email    = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $confirm  = $_POST['password_confirm'] ?? '';
 
         $fields['name']  = $name;
         $fields['email'] = $email;
-        if (empty($name) || empty($email) || empty($password) || empty($password_confirm)) {
-            $error = 'Please fill in all fields.';
+
+        // VALIDATION
+        if (!$name || !$email || !$password || !$confirm) {
+            $error = 'All fields are required.';
         } elseif (strlen($name) < 2) {
-            $error = 'Name must be at least 2 characters.';
+            $error = 'Name too short.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = 'Please enter a valid email address.';
+            $error = 'Invalid email.';
         } elseif (strlen($password) < 8) {
-            $error = 'Password must be at least 8 characters.';
+            $error = 'Password must be 8+ chars.';
         } elseif (!preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
-            $error = 'Password must include at least one uppercase letter and one number.';
-        } elseif ($password !== $password_confirm) {
+            $error = 'Password must contain uppercase + number.';
+        } elseif ($password !== $confirm) {
             $error = 'Passwords do not match.';
+        } elseif (empty($_POST['terms'])) { // ✅ FIX مهم
+            $error = 'You must accept terms.';
         } else {
-            $stmt = $conn->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
-            $stmt->bind_param('s', $email);
+
+            // CHECK EMAIL
+            $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->bind_param("s", $email);
             $stmt->execute();
             $stmt->store_result();
 
             if ($stmt->num_rows > 0) {
-                $error = 'An account with this email already exists.';
+                $error = 'Email already exists.';
                 $stmt->close();
             } else {
                 $stmt->close();
-                $hashed = password_hash($password, PASSWORD_BCRYPT);
-                $stmt   = $conn->prepare('INSERT INTO users (name, email, password, created_at) VALUES (?, ?, ?, NOW())');
-                $stmt->bind_param('sss', $name, $email, $hashed);
+
+                // INSERT
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+
+                $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $name, $email, $hash);
 
                 if ($stmt->execute()) {
-                    $new_id = $stmt->insert_id;
-                    $stmt->close();
-                    session_regenerate_id(true);
-                    $_SESSION['user_id']   = $new_id;
-                    $_SESSION['user_name'] = $name;
 
-                    header('Location: ../../home.php');
+                    // SESSION
+                    session_regenerate_id(true);
+
+                    $_SESSION['user_id']    = $stmt->insert_id;
+                    $_SESSION['user_name']  = $name;
+                    $_SESSION['user_email'] = $email;
+
+                    // regenerate CSRF (optional but better)
+                    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+                    header("Location: ../../../home.php");
                     exit;
                 } else {
-                    $error = 'Something went wrong. Please try again.';
-                    $stmt->close();
+                    $error = 'Database error.';
                 }
+
+                $stmt->close();
             }
         }
     }
@@ -73,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create account</title>
-    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../style/signup.css">
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../style/signup.css">
 </head>
 
 <body>
@@ -83,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Visual panel -->
         <div class="auth-visual">
-            <img src="../../assets/img/login.jpg" alt="Sign up illustration">
+            <img src="../../../assets/img/login.jpg" alt="Sign up illustration">
             <p class="tagline">Join us today</p>
             <p class="sub">Create your free account in seconds</p>
         </div>

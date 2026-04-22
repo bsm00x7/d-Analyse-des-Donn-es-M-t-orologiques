@@ -47,9 +47,13 @@ switch ($routeInfo[0]) {
         } elseif ($page === 'signUp') {
             include __DIR__ . '/app/view/auth/sign_up.php';
         } elseif ($page === 'dashboard') {
-            include __DIR__ . '/app/view/dashboard.php';
+            include __DIR__ . '/app/view/dashboard/dashbord.php';
         } elseif ($page === 'logout') {
             include __DIR__ . '/app/view/logout.php';
+        } elseif ($page === 'gestionError') {
+            include __DIR__ . '/app/view/dashboard/gestion_error.php';
+        } elseif ($page === 'gestionUsers') {
+            include __DIR__ . '/app/view/dashboard/gestion_users.php';
         }
 
         break;

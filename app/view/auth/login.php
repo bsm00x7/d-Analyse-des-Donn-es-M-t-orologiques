@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Please enter a valid email address.';
         } else {
-            $stmt = $conn->prepare('SELECT  password,role FROM users WHERE email = ? LIMIT 1');
+            $stmt = $conn->prepare('SELECT  password,role,email FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($user && password_verify($password, $user['password'])) {
                 session_regenerate_id(true);
-                $_SESSION['user_id']   = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_email'] = $user['email'];
 
                 if (!empty($_POST['remember'])) {
                     $token = bin2hex(random_bytes(32));
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="register-row">
-                Don't have an account? <a href="/sign-up">Create one</a>
+                Don't have an account? <a href="../../view/auth/sign_up.php">Create one</a>
             </div>
         </div>
     </div>

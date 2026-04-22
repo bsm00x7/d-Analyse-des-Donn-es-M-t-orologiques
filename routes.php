@@ -10,4 +10,6 @@ return function (RouteCollector $r) {
     $r->addRoute('POST', '/sign-up', 'signUp');
     $r->addRoute('GET', '/dashboard', 'dashboard');
     $r->addRoute('GET', '/logout', 'logout');
+    $r->addRoute('GET', '/gestionError', 'gestionError');
+    $r->addRoute('GET', '/gestionUsers', 'gestionUsers');
 };
