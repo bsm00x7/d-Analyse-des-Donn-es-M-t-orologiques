@@ -1,5 +1,5 @@
 <?php
-require(__DIR__ . '/../../config/database.php');
+require(__DIR__ . '/../../../config/database.php');
 
 session_start();
 
@@ -55,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in</title>
-    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../style/login.css">
+    <link href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../style/login.css">
 </head>
 
 <body>
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-card">
         <!-- Visual panel -->
         <div class="login-visual">
-            <img src="../../assets/img/login.jpg" alt="Login illustration">
+            <img src="../../../assets/img/login.jpg" alt="Login illustration">
             <p class="tagline">Welcome back</p>
             <p class="sub">Sign in to continue to your account</p>
         </div>
@@ -124,12 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="register-row">
-                Don't have an account? <a href="../view/sign_up.php">Create one</a>
+                Don't have an account? <a href="/sign-up">Create one</a>
             </div>
         </div>
     </div>
 
-    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

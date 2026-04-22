@@ -9,37 +9,32 @@ $dispatcher = simpleDispatcher(require 'routes.php');
 
 $uri = $_SERVER['REQUEST_URI'];
 
-/* 🔥 إزالة query string */
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
 
-/* 🔥 إزالة base path متاع المشروع */
 $basePath = '/analyseM';
 
 if (strpos($uri, $basePath) === 0) {
     $uri = substr($uri, strlen($basePath));
 }
-
-/* 🔥 إذا الصفحة فارغة نخليوها / */
 if ($uri === '' || $uri === false) {
     $uri = '/';
 }
 
 $uri = rawurldecode($uri);
 
-/* dispatch */
 $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $uri);
 
 switch ($routeInfo[0]) {
 
     case Dispatcher::NOT_FOUND:
         http_response_code(404);
-        include __DIR__ . '/app/view/404.php';
+        include __DIR__ . '/app/view/error/404.php';
         break;
     case Dispatcher::METHOD_NOT_ALLOWED:
         http_response_code(405);
-        include __DIR__ . '/app/view/405.php';
+        include __DIR__ . '/app/view/error/405.php';
         break;
     case Dispatcher::FOUND:
 
@@ -48,9 +43,9 @@ switch ($routeInfo[0]) {
         if ($page === 'home') {
             include __DIR__ . '/app/view/home/home.php';
         } elseif ($page === 'login') {
-            include __DIR__ . '/app/view/login.php';
+            include __DIR__ . '/app/view/auth/login.php';
         } elseif ($page === 'signUp') {
-            include __DIR__ . '/app/view/sign_up.php';
+            include __DIR__ . '/app/view/auth/sign_up.php';
         } elseif ($page === 'dashboard') {
             include __DIR__ . '/app/view/dashboard.php';
         } elseif ($page === 'logout') {
