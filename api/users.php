@@ -39,16 +39,13 @@ switch ($method) {
         break;
 
     case 'POST':
-        // Create new user
         $data = json_decode(file_get_contents('php://input'), true);
-
         $name = trim($data['name'] ?? '');
         $email = trim($data['email'] ?? '');
         $role = $data['role'] ?? 'user';
         $status = $data['status'] ?? 'active';
         $isActive = ($status === 'active') ? 1 : 0;
 
-        // Validation
         if (empty($name) || empty($email)) {
             http_response_code(400);
             echo json_encode(['error' => 'Name and email are required']);
@@ -61,7 +58,7 @@ switch ($method) {
             exit();
         }
 
-        // Check if email exists
+
         $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
         $check->bind_param("s", $email);
         $check->execute();
@@ -74,7 +71,7 @@ switch ($method) {
         }
         $check->close();
 
-        // Default password (hash it)
+        //
         $defaultPassword = 'password123';
         $hashedPassword = password_hash($defaultPassword, PASSWORD_DEFAULT);
 
@@ -96,7 +93,7 @@ switch ($method) {
         break;
 
     case 'PUT':
-        // Update user
+
         $data = json_decode(file_get_contents('php://input'), true);
         $id = $data['id'] ?? null;
 
@@ -111,8 +108,6 @@ switch ($method) {
         $role = $data['role'] ?? 'user';
         $status = $data['status'] ?? 'active';
         $isActive = ($status === 'active') ? 1 : 0;
-
-        // Validation
         if (empty($name) || empty($email)) {
             http_response_code(400);
             echo json_encode(['error' => 'Name and email are required']);
@@ -125,7 +120,7 @@ switch ($method) {
             exit();
         }
 
-        // Check if email exists for other users
+
         $check = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
         $check->bind_param("si", $email, $id);
         $check->execute();
@@ -154,7 +149,7 @@ switch ($method) {
         break;
 
     case 'DELETE':
-        // Delete user
+
         $id = $_GET['id'] ?? null;
 
         if (!$id) {

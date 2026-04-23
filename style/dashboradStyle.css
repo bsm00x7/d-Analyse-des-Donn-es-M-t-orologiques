@@ -587,3 +587,8 @@ td {
         opacity: 1;
     }
 }
+
+.img-logout {
+
+    background-color: red;
+}

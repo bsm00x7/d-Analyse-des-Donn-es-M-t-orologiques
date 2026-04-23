@@ -121,6 +121,7 @@ $users_result_customers = $users_query->get_result();
                         <div class="user-name"><?= htmlspecialchars($user_name) ?></div>
                         <div class="user-role"><?= htmlspecialchars($user_email) ?></div>
                     </div>
+                    <div><img class="img-logout" src="../../../assets/img/logout.svg" width="24px" alt=""></div>
                 </div>
             </div>
         </aside>
@@ -131,10 +132,7 @@ $users_result_customers = $users_query->get_result();
                     <div class="page-title" id="topbar-title">Home</div>
                     <div class="page-crumb" id="topbar-crumb">ADMINCORE / HOME</div>
                 </div>
-                <div style="display: flex; gap: 12px;">
-                    <button class="topbar-btn" onclick="handleRefresh()">⟳ Refresh</button>
-                    <button class="topbar-btn btn-primary" id="topbar-add-btn" onclick="handleAdd()">+ Add New</button>
-                </div>
+
             </div>
 
             <div class="content">
@@ -172,22 +170,17 @@ $users_result_customers = $users_query->get_result();
                             <tbody>
                                 <tr>
                                     <td>User login</td>
-                                    <td>alice@mail.com</td>
+                                    <td>ahmed@gmail.com</td>
                                     <td>2 min ago</td>
                                     <td><span class="badge badge-success">OK</span></td>
                                 </tr>
                                 <tr>
-                                    <td>Order #4421 placed</td>
-                                    <td>bob@mail.com</td>
+                                    <td>User login</td>
+                                    <td>bassem@mail.com</td>
                                     <td>15 min ago</td>
                                     <td><span class="badge badge-success">OK</span></td>
                                 </tr>
-                                <tr>
-                                    <td>Payment failed</td>
-                                    <td>carol@mail.com</td>
-                                    <td>1 hr ago</td>
-                                    <td><span class="badge badge-danger">Error</span></td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -205,29 +198,41 @@ $users_result_customers = $users_query->get_result();
                                     <circle cx="11" cy="11" r="8" />
                                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
                                 </svg>
-                                <input placeholder="Search product…" />
+                                <input placeholder="Search File" />
                             </div>
                         </div>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Product</th>
+                                    <th>ID</th>
+                                    <th>File name</th>
                                     <th>Category</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>format</th>
+                                    <th>uploaded By </th>
+                                    <th>row Count</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Wireless Headset Pro</td>
-                                    <td>Electronics</td>
-                                    <td>$199</td>
-                                    <td>142</td>
-                                    <td><span class="badge badge-success">Active</span></td>
-                                    <td><button class="action-btn">✏️</button><button class="action-btn">🗑</button></td>
-                                </tr>
+                                <?php
+                                $stmt = $conn->prepare("SELECT id, filename, format, uploadedBy, rowCount FROM data_files ORDER BY id");
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "
+                                                <tr>
+                                  <td>" . htmlspecialchars($row['id']) . "</td>
+                                  <td>" . htmlspecialchars($row['filename']) . "</td>
+                                 <td>" . htmlspecialchars($row['format']) . "</td>
+                                     <td> <span class='badge badge-success'>" . htmlspecialchars($row['uploadedBy']) . " </span></td>
+                                 <td>" . htmlspecialchars($row['rowCount']) . "</td>
+                                 </tr>
+    ";
+                                }
+                                ?>
+
+
                             </tbody>
                         </table>
                     </div>
@@ -501,7 +506,7 @@ $users_result_customers = $users_query->get_result();
         // API Functions
         async function fetchUsers() {
             try {
-                const response = await fetch('../api/users.php');
+                const response = await fetch('../../../api/users.php');
                 if (!response.ok) throw new Error('Failed to fetch users');
                 users = await response.json();
                 renderUsers();
@@ -533,7 +538,7 @@ $users_result_customers = $users_query->get_result();
             try {
                 let response;
                 if (editingUserId) {
-                    response = await fetch('../api/users.php', {
+                    response = await fetch('../../../api/users.php', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -544,7 +549,7 @@ $users_result_customers = $users_query->get_result();
                         })
                     });
                 } else {
-                    response = await fetch('../api/users.php', {
+                    response = await fetch('../../../api/users.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -570,7 +575,7 @@ $users_result_customers = $users_query->get_result();
             if (!confirm('Are you sure you want to delete this user?')) return;
 
             try {
-                const response = await fetch(`../api/users.php?id=${id}`, {
+                const response = await fetch(`../../../api/users.php?id=${id}`, {
                     method: 'DELETE'
                 });
 

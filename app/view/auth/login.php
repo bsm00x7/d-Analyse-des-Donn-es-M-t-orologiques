@@ -32,15 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $token = bin2hex(random_bytes(32));
                     setcookie('remember_token', $token, time() + 60 * 60 * 24 * 30, '/', '', true, true);
                 }
-                if ($user['role'] == 'admin') {
-
-                    header('Location: /analyseM/dashboard');
+                if ($user['isActive'] == 1) {
+                    if ($user['role'] == 'admin') {
+                        header('Location: ../dashboard/dashboard.php');
+                        exit;
+                    } else {
+                        header('Location: ../home/home.php');
+                        exit;
+                    }
                 } else {
-                    header('Location: /analyseM/home.php');
+                    header('Location: ./error/userSuspended.php');
+                    exit;
                 }
-
-
-                exit;
             } else {
                 $error = 'Invalid email or password.';
             }
