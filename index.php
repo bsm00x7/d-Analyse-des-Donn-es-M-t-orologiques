@@ -41,7 +41,7 @@ switch ($routeInfo[0]) {
         $page = $routeInfo[1];
 
         if ($page === 'home') {
-            include __DIR__ . '/app/view/home/home.php';
+            include_once __DIR__ . '/app/view/home/home.php';
         } elseif ($page === 'login') {
             include __DIR__ . '/app/view/auth/login.php';
         } elseif ($page === 'signUp') {
