@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // regenerate CSRF (optional but better)
                     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
-                    header("Location: ../../../home.php");
+                    header("Location: /");
                     exit;
                 } else {
                     $error = 'Database error.';
@@ -215,12 +215,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="signin-row">
-                Already have an account? <a href="../view/login.php">Sign in</a>
+                Already have an account? <a href="/login">Sign in</a>
             </div>
         </div>
     </div>
 
-    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function togglePw(fieldId, btn) {
             var input = document.getElementById(fieldId);
